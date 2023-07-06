@@ -1,10 +1,25 @@
 const model = new require('../../models/usuario')
+const validacao = require('../validacao')
+const auth = require('../auth')
 const rota = 'usuarios'
 module.exports = (app)=>{
     app.post(`/cadastrar/${rota}`, async (req, res)=>{
-        let dados = req.body
-        let respBd = await model.create(dados)
-        res.json(respBd)
+        try{
+            let dados = req.body;
+            let dadoslogin = await validacao.validarCadastro(dados, model)
+            if(dadoslogin.validacao){
+                dados.senha = await auth.criptografar(dados.senha)
+                let respBd = await model.create(dados)
+                delete respBd.dataValues.senha
+                res.json(respBd).status(201)
+            
+            }else{
+                res.json(dadoslogin).status(200)
+            }
+        }
+        catch(error){
+            res.json(error).status(401)
+        }
     })
     
     app.get(`/consultar/${rota}/:id?`, async (req, res)=>{

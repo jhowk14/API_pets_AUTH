@@ -42,7 +42,8 @@ sequelize.sync()
     "telefone":"17997826667",
     "whatsapp":"551799996666",
     "email":"josé@teste.com",
-    "senha":"1247"
+    "senha":"1247",
+    "confirmacao":"123"
 }
 
 */

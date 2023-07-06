@@ -1,3 +1,5 @@
+const auth = require("../auth")
+
 const model = new require('../../models/pet')
 const usuario = new require('../../models/usuario')
 const rota = 'pets'
@@ -8,7 +10,7 @@ module.exports = (app)=>{
         res.json(respBd)
     })
     
-    app.get(`/consultar/${rota}/:id?`, async (req, res)=>{
+    app.get(`/consultar/${rota}/:id?`, auth.validarToken,  async (req, res)=>{
         try {
             let dados = req.params.id? 
                 await model.findOne({include:[{model:usuario}]}, {where:{id:req.params.id}}) : 
